@@ -1,23 +1,133 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-        <!-- <h1>Hello World</h1>
-        <div id="parent">
-            <div id="gol"></div>
-            <button id="b1">btn</button>
-        </div>
-        <button id="b2">btn</button> -->
-        <div id="parent">
-            <h1>Guess ! who is the 'Monitor' ?</h1>
-            <h1>*****</h1>
-            <button>Click to Guess</button>
-        </div>
-        <script src="script.js"></script>
-</body>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup Page</title>  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: linear-gradient(135deg,#667eea,#764ba2);
+    }
+
+    .signup-box{
+      background:#fff;
+      width:350px;
+      padding:25px;
+      border-radius:10px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .signup-box h2{
+      text-align:center;
+      margin-bottom:20px;
+      color:#333;
+    }
+
+    .signup-box input{
+      width:100%;
+      padding:12px;
+      margin-bottom:15px;
+      border:1px solid #ccc;
+      border-radius:6px;
+      outline:none;
+      font-size:14px;
+    }
+
+    .signup-box input:focus{
+      border-color:#667eea;
+    }
+
+    .signup-box button{
+      width:100%;
+      padding:12px;
+      background:#667eea;
+      border:none;
+      color:#fff;
+      font-size:16px;
+      border-radius:6px;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .signup-box button:hover{
+      background:#5a67d8;
+    }
+
+    .msg{
+      margin-top:15px;
+      text-align:center;
+      font-size:14px;
+    }
+
+    .success{ color:green; }
+    .error{ color:red; }
+
+  </style></head>
+<body>  <div class="signup-box">
+    <h2>Create Account</h2><input type="text" id="userid" placeholder="User ID">
+<input type="text" id="name" placeholder="Full Name">
+<input type="password" id="password" placeholder="Password">
+
+<button onclick="signup()">Sign Up</button>
+
+<div id="msg" class="msg"></div>
+
+  </div>  <script>
+    const API_URL = "YOUR_API_URL_HERE"; // Apps Script Web App URL
+
+    function signup(){
+      const userid = document.getElementById('userid').value.trim();
+      const name = document.getElementById('name').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const msg = document.getElementById('msg');
+
+      msg.innerHTML = "";
+
+      if(!userid || !name || !password){
+        msg.innerHTML = "All fields are required";
+        msg.className = "msg error";
+        return;
+      }
+
+      fetch(API_URL,{
+        method:"POST",
+        body: JSON.stringify({
+          userid: userid,
+          name: name,
+          password: password
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.status === "success"){
+          msg.innerHTML = "Signup successful! You can login now.";
+          msg.className = "msg success";
+          document.getElementById('userid').value = "";
+          document.getElementById('name').value = "";
+          document.getElementById('password').value = "";
+        }
+        else if(data.status === "exists"){
+          msg.innerHTML = "User ID already exists";
+          msg.className = "msg error";
+        }
+        else{
+          msg.innerHTML = "Something went wrong";
+          msg.className = "msg error";
+        }
+      })
+      .catch(err => {
+        msg.innerHTML = "Server error";
+        msg.className = "msg error";
+      });
+    }
+  </script></body>
 </html>
